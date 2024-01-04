@@ -47,7 +47,7 @@ public class StudentsController:ControllerBase
         }
         return Ok(result);
     }
-    [HttpPut("DeleteStudent/{id}")]
+    [HttpDelete("DeleteStudent/{id}")]
     public async Task<IActionResult> DeleteStudent(int id)
     {
         var result  = await _studentsService.DeleteStudent(id);
