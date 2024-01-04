@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using StudentManagement.Server.Data;
 using StudentManagement.Server.Repositories;
 using StudentManagement.Shared.models;
 
@@ -5,23 +7,82 @@ namespace StudentManagement.Server.Services;
 
 public class TeacherService : TeacherRepository
 {
+    private readonly DatabaseContext _dbcontext;
+
+    public TeacherService(DatabaseContext dbcontext)
+    {
+        _dbcontext = dbcontext;
+    }
     public async Task<List<Teacher>> GetAllTeachers()
     {
-        throw new NotImplementedException();
+        var teachers = await _dbcontext.Teachers.ToListAsync();
+        return teachers;
     }
 
     public async Task<Teacher> AddTeacher(Teacher teacher)
     {
-        throw new NotImplementedException();
+        var leTeacher = await _dbcontext.Teachers.AddAsync(teacher);
+        return leTeacher.Entity;
     }
 
-    public async Task<bool> UpdateTeacher(int id)
+    public async Task<bool> UpdateTeacher(int id, Teacher teacher)
     {
-        throw new NotImplementedException();
+        var existingTeacher = await _dbcontext.Teachers.Where(t => t.Id == id).FirstOrDefaultAsync();
+        if (existingTeacher == null)
+        {
+            return false;
+        }
+
+        var firstName = teacher.Firstname;
+        if (string.IsNullOrEmpty(firstName))
+        {
+            existingTeacher.Firstname = existingTeacher.Firstname;
+        }
+        else
+        {
+            existingTeacher.Firstname = teacher.Firstname;
+        }
+
+        var lastName = teacher.Lastname;
+        if (string.IsNullOrEmpty(lastName))
+        {
+            existingTeacher.Lastname = existingTeacher.Lastname;
+        }
+        else
+        {
+            existingTeacher.Lastname = teacher.Lastname;
+        }
+
+        var address = teacher.Address;
+        if (string.IsNullOrEmpty(address))
+        {
+            existingTeacher.Address = existingTeacher.Address;
+        }
+        else
+        {
+            existingTeacher.Address = teacher.Address;
+        }
+
+        var phone = teacher.Phone;
+        if (string.IsNullOrEmpty(phone))
+        {
+            existingTeacher.Phone = existingTeacher.Phone;
+        }
+        else
+        {
+            existingTeacher.Phone = teacher.Phone;
+        }
+        
+        return true;
     }
 
     public async Task<bool> DeleteTeacher(int id)
     {
-        throw new NotImplementedException();
+        var teacher = await _dbcontext.Teachers.Where(t => t.Id == id).FirstOrDefaultAsync();
+        if (teacher is null)
+            return false;
+        _dbcontext.Teachers.Remove(teacher);
+        await _dbcontext.SaveChangesAsync();
+        return true;
     }
 }
