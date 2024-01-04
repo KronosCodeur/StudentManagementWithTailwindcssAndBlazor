@@ -21,6 +21,8 @@ public class StudentsService : IStudentsRepository
 
     public async Task<Student> SaveStudent(Student student)
     {
+        var classroom = await _databaseContext.Classrooms.FirstOrDefaultAsync(c => c.Id == student.ClassroomId);
+        student.Classroom = classroom;
         await _databaseContext.Students.AddAsync(student);
         await _databaseContext.SaveChangesAsync();
         return student;
@@ -50,7 +52,8 @@ public class StudentsService : IStudentsRepository
             ? oldStudent.Firstname
             : student.Phone;
         oldStudent.Age = student.Age;
-
+        _databaseContext.Students.Update(oldStudent);
+        await _databaseContext.SaveChangesAsync();
         return oldStudent;
     }
 

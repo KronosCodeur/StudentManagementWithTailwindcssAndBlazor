@@ -1,5 +1,7 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Server.Services;
+using StudentManagement.Shared.DTO;
 using StudentManagement.Shared.models;
 
 namespace StudentManagement.Server.Controllers;
@@ -9,10 +11,11 @@ namespace StudentManagement.Server.Controllers;
 public class StudentsController:ControllerBase
 {
     private readonly StudentsService _studentsService;
-
-    public StudentsController(StudentsService studentsService)
+    private readonly IMapper _mapper;
+    public StudentsController(StudentsService studentsService, IMapper mapper)
     {
         _studentsService = studentsService;
+        _mapper = mapper;
     }
 
     [HttpGet("GetAllStudents")]
@@ -32,8 +35,9 @@ public class StudentsController:ControllerBase
         return Ok(student);
     }
     [HttpPost("SaveStudent")]
-    public async Task<ActionResult<Student>> SaveStudent(Student student)
+    public async Task<ActionResult<Student>> SaveStudent(StudentCreateDto studentCreateDto)
     {
+        var student = _mapper.Map<Student>(studentCreateDto);
         var newStudent  = await _studentsService.SaveStudent(student);
         return CreatedAtAction(nameof(GetStudentDetails),newStudent,newStudent.Id);
     }
