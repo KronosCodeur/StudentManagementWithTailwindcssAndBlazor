@@ -27,5 +27,4 @@
         <ProjectReference Include="..\Client\StudentManagement.Client.csproj"/>
         <ProjectReference Include="..\Shared\StudentManagement.Shared.csproj"/>
     </ItemGroup>
-
 </Project>
