@@ -1,5 +1,7 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Server.Services;
+using StudentManagement.Shared.DTO;
 using StudentManagement.Shared.models;
 
 namespace ClassroomManagement.Server.Controllers;
@@ -9,10 +11,12 @@ namespace ClassroomManagement.Server.Controllers;
 public class ClassroomsController:ControllerBase
 {
     private readonly ClassroomsService _classroomsService;
+    private readonly IMapper _mapper;
 
-    public ClassroomsController(ClassroomsService classroomsService)
+    public ClassroomsController(ClassroomsService classroomsService, IMapper mapper)
     {
         _classroomsService = classroomsService;
+        _mapper = mapper;
     }
 
     [HttpGet("GetAllClassrooms")]
@@ -32,8 +36,10 @@ public class ClassroomsController:ControllerBase
         return Ok(classroom);
     }
     [HttpPost("SaveClassroom")]
-    public async Task<ActionResult<Classroom>> SaveClassroom(Classroom classroom)
+    public async Task<ActionResult<Classroom>> SaveClassroom(ClassroomCreateDto classroomCreateDto)
     {
+        var classroom = _mapper.Map<Classroom>(classroomCreateDto);
+        classroom.Students = new List<Student>();
         var newClassroom  = await _classroomsService.SaveClassroom(classroom);
         return CreatedAtAction(nameof(GetClassroomDetails),newClassroom,newClassroom.Id);
     }

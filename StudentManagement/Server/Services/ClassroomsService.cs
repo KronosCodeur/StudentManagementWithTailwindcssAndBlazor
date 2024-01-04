@@ -29,7 +29,7 @@ public class ClassroomsService : IClassroomRepository
 
     public async Task<Classroom?> GetClassroomDetails(int id)
     {
-        return await _databaseContext.Classrooms.FirstOrDefaultAsync(classroom => classroom.Id == id);
+        return await _databaseContext.Classrooms.Include(classroom => classroom.Students).FirstOrDefaultAsync(classroom => classroom.Id == id);
     }
 
     public async Task<Classroom?> UpdateClassroomInfo(int id, Classroom classroom)
