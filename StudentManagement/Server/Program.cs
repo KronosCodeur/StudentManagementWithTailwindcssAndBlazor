@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen(opt =>
 });
 builder.Services.AddDbContext<DatabaseContext>(opt=>opt.UseSqlite(builder.Configuration.GetConnectionString("SManagementDb")));
 builder.Services.AddScoped<TeacherService>();
+builder.Services.AddScoped<LessonService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
