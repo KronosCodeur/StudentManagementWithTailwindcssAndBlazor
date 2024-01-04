@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
+using StudentManagement.Server.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
+builder.Services.AddDbContext<DatabaseContext>(opt=>opt.UseSqlite(builder.Configuration.GetConnectionString("SManagementDb")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
