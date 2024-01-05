@@ -1,11 +1,16 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using StudentManagement.Server.Data;
+using StudentManagement.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<StudentsService>();
+builder.Services.AddScoped<ClassroomsService>();
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddControllers().AddJsonOptions(j=>j.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -15,7 +20,9 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 builder.Services.AddDbContext<DatabaseContext>(opt=>opt.UseSqlite(builder.Configuration.GetConnectionString("SManagementDb")));
-
+builder.Services.AddScoped<TeacherService>();
+builder.Services.AddScoped<LessonService>();
+builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
