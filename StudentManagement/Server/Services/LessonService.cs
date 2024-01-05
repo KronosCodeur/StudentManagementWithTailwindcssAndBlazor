@@ -23,6 +23,7 @@ public class LessonService : LessonRepository
     public async Task<Lesson> AddLesson(Lesson lesson)
     {
         var laLesson = await _dbContext.Lessons.AddAsync(lesson);
+        await _dbContext.SaveChangesAsync();
         return laLesson.Entity;
     }
 

@@ -22,12 +22,13 @@ public class TeacherService : TeacherRepository
     public async Task<Teacher> AddTeacher(Teacher teacher)
     {
         var leTeacher = await _dbcontext.Teachers.AddAsync(teacher);
+        await _dbcontext.SaveChangesAsync();
         return leTeacher.Entity;
     }
 
-    public async Task<bool> UpdateTeacher(int id, Teacher teacher)
+    public async Task<bool> UpdateTeacher(Teacher teacher)
     {
-        var existingTeacher = await _dbcontext.Teachers.Where(t => t.Id == id).FirstOrDefaultAsync();
+        var existingTeacher = await _dbcontext.Teachers.Where(t => t.Id == teacher.Id).FirstOrDefaultAsync();
         if (existingTeacher == null)
         {
             return false;
@@ -72,7 +73,8 @@ public class TeacherService : TeacherRepository
         {
             existingTeacher.Phone = teacher.Phone;
         }
-        
+
+        await _dbcontext.SaveChangesAsync();
         return true;
     }
 
